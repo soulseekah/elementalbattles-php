@@ -1,0 +1,14 @@
+{
+	"repositories": {
+		"phpeosio": {
+			"type": "path",
+			"url": "lib/phpeosio"
+		}
+	},
+    "require": {
+        "soulseekah/phpeosio": "@dev",
+		"bramus/router": "^1.6",
+		"twig/twig": "^3.3",
+		"aura/session": "^2.1"
+    }
+}
