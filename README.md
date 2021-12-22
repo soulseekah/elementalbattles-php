@@ -26,11 +26,13 @@ All signing is done on the server-side, meaning the key is passed to the server.
 
 Because Re(act|dux) is too damn complicated and fancy. Us backend programmers prefer beckend programming. And the less JavaScript the better :)
 
+Built with a router, Twig, TailwindCSS.
+
 ## TODO
 
 - [x] Lesson 1
 - [x] Lesson 2
-- [ ] Lesson 3
+- [x] Lesson 3
 - [ ] Lesson 4
 - [ ] Lesson 5
 - [ ] Lesson 6

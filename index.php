@@ -9,19 +9,27 @@ use Bramus\Router\Router;
 use Aura\Session\SessionFactory;
 use PHPEOSIO\Client;
 
+$client = new PHPEOSIO\Client( 'http://localhost:8888' );
 $session = ( new SessionFactory )->newInstance( $_COOKIE );
 $templates = new \Twig\Environment( new \Twig\Loader\FilesystemLoader( __DIR__ . '/templates/' ), [] );
 $router = new Router();
 
-$router->get( '/', function() use ( $router, $templates, $session ) {
-	$user = $session->getSegment( 'elemental' )->get( 'account' );
+if ( $account = $session->getSegment( 'elemental' )->get( 'account' ) ) {
+	$client->add_key( "$account@active", $session->getSegment( 'elemental' )->get( 'key' ) );
+}
 
+$router->get( '/', function() use ( $router, $templates, $account, $client ) {
+	$user = $client->get_table_rows( 'elemental', 'users', 'elemental', [
+		'lower_bound' => $account,
+		'limit' => 1,
+	] );
 	echo $templates->render( 'home.tpl', [
-		'user' => $user,
+		'user' => reset( $user ),
+		'account' => $account,
 	] );
 } );
 
-$router->match( 'GET|POST', '/login/', function() use ( $router, $templates, $session ) {
+$router->match( 'GET|POST', '/login/', function() use ( $router, $templates, $session, $client ) {
 	if ( $session->getSegment( 'elemental' )->get( 'account' ) ) {
 		header( 'Location: /' );
 		exit;
@@ -42,8 +50,6 @@ $router->match( 'GET|POST', '/login/', function() use ( $router, $templates, $se
 		] );
 		return;
 	}
-
-	$client = new PHPEOSIO\Client( 'http://localhost:8888' );
 
 	try {
 		$client->add_key( "$account@active", $key );
